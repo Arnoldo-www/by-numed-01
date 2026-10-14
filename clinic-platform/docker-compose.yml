@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: clinic
+      POSTGRES_PASSWORD: clinic
+      POSTGRES_DB: clinic_platform
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  backend:
+    build: .
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: clinic_platform
+      DB_USER: clinic
+      DB_PASSWORD: clinic
+      JWT_SECRET: changeme-please-use-a-long-random-secret-in-production
+      PORT: 8080
+volumes:
+  db_data:
